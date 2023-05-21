@@ -15,4 +15,4 @@ Before running this application, make sure you have the following installed:
 1. Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/flask-weather-api.git
+git clone https://github.com/soumyajitmaity/weather-app.git
