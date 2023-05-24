@@ -16,17 +16,33 @@ def gen_url(city:str)->str:
 
 
 def get_city() -> str: #in testing we can patch thish with another function
-    return request.json["city"]
+    data =  request.args #returns a bite type
+    args = args.to_dict()
+    try:
+        city = args["city"]
+        return {"message" : city}
+    except:
+        return {"message" : "NULL"}
 
-
-
-
+def get_param_from_request_json(fieldName : str) -> str:
+    dataField = ''
+    data = request.json
+    if data.get(fieldName) != None:
+        dataField = data.get(fieldName)
+    
+    return dataField
 
 def create_app():
     app = Flask(__name__)
 
+    @app.route("/test_json_data", methods = ['GET'])
+    def test():
+        data = get_param_from_request_json('test_param')
+        resp = make_response()
+        resp.data = data.encode()
+        return resp
 
-
+        
     @app.route("/",methods=["GET"])
     def index():
         resp = make_response()
@@ -38,7 +54,13 @@ def create_app():
 
     @app.route("/get_weather", methods = ["GET"])
     def data():
-        city = get_city()
+       
+        
+        city = get_param_from_request_json('city')
+        if len(city) == 0:
+            return 
+        
+
         url = gen_url(city=city)
         print (url)
         data_original = json.loads(req.get(url).text)
@@ -59,11 +81,20 @@ def create_app():
                 "wind":wind
 
             }
-            resp = make_response()
-            resp.data  = b"" . join(str(obj))
-            return resp
-
+            return obj
+    
+    
+    
+    
+    
     return app
+
+
+
+
+
+
+
 
 
 app = create_app()
